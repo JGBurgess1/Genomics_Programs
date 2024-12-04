@@ -128,8 +128,17 @@ def get_longest_orf_for_seq_key(seq_dict, orf_dict, seq_id):
     # +`1 for the position?`
     return max_length_orf_key, max_length, position
 
+def find_all_subsequences(seq_dict, N):
+    subsequences = {}
+    for key in seq_dict:
+        for i in range(len(seq_dict[key])-N):
+            subsequence = seq_dict[key][i:i+N]
+            subsequences[subsequence] = 0
+    return subsequences
+
 def get_num_repeats(N, seq_dict):
-    sequences = generate_dna_sequences_recursive(N)
+    #sequences = generate_dna_sequences_recursive(N)
+    sequences = find_all_subsequences(seq_dict, N)
     max_num_repeats = 0
     max_num_repeats_seq = ""
 
@@ -157,7 +166,8 @@ def get_num_repeats(N, seq_dict):
     return max_num_repeats, max_num_repeats_seq, num_seqs
 
 
-def generate_dna_sequences_recursive(length):
+def generate_dna_sequences_recursive(length): # long, and takes far too long for sequences more than 10 bases in length!
+  # See the find_all_subsequences method above.
   """Recursive function, genereated by Gemini, to generate all possible DNA sequences of a given length. 
   Args:
     length: The desired length of the DNA sequences.
@@ -196,5 +206,5 @@ if __name__ == "__main__":
     seq_id = 'gi|142022655|gb|EQ086233.1|16'
     print(f"The longest ORF for seq_id {seq_id} is: {get_longest_orf_for_seq_key(seq_dict, orf_dict, seq_id)}")
     
-    N_seqs = 9
+    N_seqs = 12
     print(f"The most repeated sequence of N={N_seqs} is {get_num_repeats(N_seqs, seq_dict)}")
